@@ -2,16 +2,17 @@
 
 namespace app\controllers;
 
-use app\models\Lab;
-use app\models\LabSearch;
+use Yii;
+use app\models\StatusType;
+use app\models\StatusTypeSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * LabController implements the CRUD actions for Lab model.
+ * StatusTypeController implements the CRUD actions for StatusType model.
  */
-class LabController extends Controller
+class StatusTypeController extends Controller
 {
     /**
      * @inheritDoc
@@ -32,13 +33,18 @@ class LabController extends Controller
     }
 
     /**
-     * Lists all Lab models.
+     * Lists all StatusType models.
      *
      * @return string
      */
     public function actionIndex()
-    {
-        $searchModel = new LabSearch();
+    {   
+
+        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
+            return $this->redirect('/site/login');
+        }
+
+        $searchModel = new StatusTypeSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
@@ -48,26 +54,36 @@ class LabController extends Controller
     }
 
     /**
-     * Displays a single Lab model.
+     * Displays a single StatusType model.
      * @param int $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
-    {
+    {   
+
+        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
+            return $this->redirect('/site/login');
+        }
+
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
     }
 
     /**
-     * Creates a new Lab model.
+     * Creates a new StatusType model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
-    {
-        $model = new Lab();
+    {   
+
+        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
+            return $this->redirect('/site/login');
+        }
+
+        $model = new StatusType();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -83,14 +99,19 @@ class LabController extends Controller
     }
 
     /**
-     * Updates an existing Lab model.
+     * Updates an existing StatusType model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id)
-    {
+    {   
+
+        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
+            return $this->redirect('/site/login');
+        }
+
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
@@ -103,29 +124,39 @@ class LabController extends Controller
     }
 
     /**
-     * Deletes an existing Lab model.
+     * Deletes an existing StatusType model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)
-    {
+    {   
+
+        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
+            return $this->redirect('/site/login');
+        }
+
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
     }
 
     /**
-     * Finds the Lab model based on its primary key value.
+     * Finds the StatusType model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id ID
-     * @return Lab the loaded model
+     * @return StatusType the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
-    {
-        if (($model = Lab::findOne(['id' => $id])) !== null) {
+    {   
+
+        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
+            return $this->redirect('/site/login');
+        }
+
+        if (($model = StatusType::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

@@ -3,16 +3,16 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Category;
-use app\models\CategorySearch;
+use app\models\User;
+use app\models\UserSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * CategoryController implements the CRUD actions for Category model.
+ * UserController implements the CRUD actions for User model.
  */
-class CategoryController extends Controller
+class UserController extends Controller
 {
     /**
      * @inheritDoc
@@ -33,7 +33,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * Lists all Category models.
+     * Lists all User models.
      *
      * @return string
      */
@@ -44,7 +44,7 @@ class CategoryController extends Controller
             return $this->redirect('/site/login');
         }
 
-        $searchModel = new CategorySearch();
+        $searchModel = new UserSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
@@ -54,13 +54,13 @@ class CategoryController extends Controller
     }
 
     /**
-     * Displays a single Category model.
-     * @param int $id ID
+     * Displays a single User model.
+     * @param int $id
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
-    {   
+    {
 
         if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
             return $this->redirect('/site/login');
@@ -72,7 +72,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * Creates a new Category model.
+     * Creates a new User model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
@@ -82,8 +82,8 @@ class CategoryController extends Controller
         if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
             return $this->redirect('/site/login');
         }
-        
-        $model = new Category();
+
+        $model = new User();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -99,14 +99,15 @@ class CategoryController extends Controller
     }
 
     /**
-     * Updates an existing Category model.
+     * Updates an existing User model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
+     * @param int $id
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id)
     {   
+
         if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
             return $this->redirect('/site/login');
         }
@@ -123,18 +124,18 @@ class CategoryController extends Controller
     }
 
     /**
-     * Deletes an existing Category model.
+     * Deletes an existing User model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
+     * @param int $id
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)
-    {
+    {   
 
         if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
             return $this->redirect('/site/login');
-        }     
+        }
 
         $this->findModel($id)->delete();
 
@@ -142,22 +143,23 @@ class CategoryController extends Controller
     }
 
     /**
-     * Finds the Category model based on its primary key value.
+     * Finds the User model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return Category the loaded model
+     * @param int $id
+     * @return User the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {   
+
         if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
             return $this->redirect('/site/login');
         }
 
-        if (($model = Category::findOne(['id' => $id])) !== null) {
+        if (($model = User::findOne(['id' => $id])) !== null) {
             return $model;
         }
 
-        throw new NotFoundHttpException('Запрошенная страница не существует.');
+        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }

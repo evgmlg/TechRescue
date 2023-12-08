@@ -1,24 +1,24 @@
 <?php
 
-use app\models\Lab;
+use app\models\StatusType;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 /** @var yii\web\View $this */
-/** @var app\models\LabSearch $searchModel */
+/** @var app\models\StatusTypeSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Labs';
+$this->title = 'Типы статусов';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="lab-index">
+<div class="status-type-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Lab', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Создать новый статус', ['create'], ['class' => 'btn btn-primary']) ?>
     </p>
 
     <?php Pjax::begin(); ?>
@@ -32,10 +32,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             'name',
-            'age',
             [
                 'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Lab $model, $key, $index, $column) {
+                'urlCreator' => function ($action, StatusType $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
                  }
             ],

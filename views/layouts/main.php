@@ -8,6 +8,7 @@ use app\widgets\Alert;
 use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Html;
 use yii\bootstrap5\Nav;
+use yii\bootstrap5\Dropdown;
 use yii\bootstrap5\NavBar;
 
 AppAsset::register($this);
@@ -52,15 +53,26 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         // if (Yii::$app->user->isGuest) {
         //     $menuItems[] = ['label' => 'Регистрация', 'url' => ['/site/signup']];
         // }
-        if (!Yii::$app->user->isGuest && Yii::$app->user->identity->is_admin == 1) {
-            $menuItems[] = ['label' => 'Оборудование', 'url' => ['/equipment']];
-            $menuItems[] = ['label' => 'Задачи', 'url' => ['/tasks']];
-        }
 
+
+        if (!Yii::$app->user->isGuest && Yii::$app->user->identity->is_admin == 1) {
+            $menuItems[] =[
+                'label' => 'Меню',
+                'items' => [
+                    ['label' => 'Категории(category)', 'url' => ['/category']],
+                    ['label' => 'Оборудование(equipment)', 'url' => ['/equipment']],
+                    ['label' => 'Услуги(services)', 'url' => ['/services']],
+                    ['label' => 'Тип статуса(status_type)', 'url' => ['/status-type']],
+                    ['label' => 'Задачи(tasks)', 'url' => ['/tasks']],
+                    ['label' => 'Пользователи(user)', 'url' => ['/user']],
+                ],
+            ];
+        }
+        
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav me-auto mb-2 mb-md-0'],
             'items' => $menuItems,
-        ]);
+        ]); 
         if (Yii::$app->user->isGuest) {
             echo Html::tag('div', Html::a('Войти', ['/site/login'], ['class' => ['btn btn-link login text-decoration-none']]), ['class' => ['d-flex']]);
         } else {
@@ -80,6 +92,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
             echo Html::tag('div', Html::a('Регистрация', ['/site/signup'], ['class' => ['btn btn-link login text-decoration-none']]), ['class' => ['d-flex']]);
         }
         NavBar::end();
+        
         ?>
     </header>
 

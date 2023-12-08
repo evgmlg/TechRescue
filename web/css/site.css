@@ -167,6 +167,10 @@ a.desc:after {
     color: #0066ff;
 }
 
+.drdwn{
+    list-style-type: none;
+}
+
 @media screen and (max-width: 768px) {
     .lgcontacts a{
         font-size: 15px;

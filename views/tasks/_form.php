@@ -24,14 +24,14 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'worker_id')->textInput() ?>
 
-    <?= $form->field($model, 'started_at')->textInput() ?>
+    <?= $form->field($model, 'started_at')->input("datetime-local") ?>
 
-    <?= $form->field($model, 'end_at')->textInput() ?>
+    <?= $form->field($model, 'end_at')->input("datetime-local") ?>
 
     <?= $form->field($model, 'status')->textInput() ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
