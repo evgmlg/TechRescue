@@ -13,7 +13,9 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h1>
+        <?= Html::encode($this->title) ?>
+    </h1>
 
     <p>
         <?= Html::a('Изменить', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
@@ -30,7 +32,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'is_admin',
+            [
+                'attribute' => 'is_admin',
+                'label' => 'Администратор',
+                'value' => function ($model) {
+                return $model->is_admin == 1 ? 'Да' : 'Нет';
+            },
+            ],
             'username',
             'auth_key',
             'password_hash',

@@ -7,11 +7,13 @@ use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
+use yii\helpers\ArrayHelper;
 
 /**
  * User model
  *
  * @property integer $id
+ * @property integer $is_admin
  * @property string $username
  * @property string $password_hash
  * @property string $password_reset_token
@@ -55,7 +57,30 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
+            ['is_admin','integer'],
         ];
+    }
+
+    public function attributeLabels()
+    {
+        return [
+            'id' => "ID пользователя",
+            'is_admin' => "Администратор",
+            'username' => "Имя пользователя",
+            'auth_key' => "Ключ аутентификации",
+            'password_hash' => "Хэш пароля",
+            'password_reset_token' => "Токен восстановления пароля",
+            'email' => "Электронная почта",
+            'status' => "Статус",
+            'created_at' => "Создан",
+            'updated_at' => "Изменен",
+            'verification_token' => "Токен верификации",
+        ];
+    }
+
+    public static function getDropDownList()
+    {
+        return ArrayHelper::map(User::find()->all(), 'id', 'username');
     }
 
     /**

@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use app\models\Category;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "equipment".
@@ -54,6 +55,11 @@ class Equipment extends \yii\db\ActiveRecord
             'received_date' => 'Дата получения',
             'description' => 'Описание',
         ];
+    }
+
+    public static function getDropDownList()
+    {
+        return ArrayHelper::map(Equipment::find()->all(), 'id', 'name');
     }
 
     /**

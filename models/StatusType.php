@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "status_type".
@@ -42,6 +43,11 @@ class StatusType extends \yii\db\ActiveRecord
             'id' => 'ID статуса',
             'name' => 'Имя статуса',
         ];
+    }
+
+    public static function getDropDownList()
+    {
+        return ArrayHelper::map(StatusType::find()->all(), 'id', 'name');
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "services".
@@ -61,5 +62,10 @@ class Services extends \yii\db\ActiveRecord
     public function getTasks()
     {
         return $this->hasMany(Tasks::class, ['services_id' => 'id']);
+    }
+
+    public static function getDropDownList()
+    {
+        return ArrayHelper::map(Services::find()->all(), 'id', 'name');
     }
 }
