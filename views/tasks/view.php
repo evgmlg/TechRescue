@@ -8,19 +8,19 @@ use yii\widgets\DetailView;
 
 $this->title = $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Задачи', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+$this->params['breadcrumbs'][] =  $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
 <div class="tasks-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h1> Задача №<?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
+        <?= Html::a('Изменить', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Удалить', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
+                'confirm' => 'Вы уверены, что хотите удалить эту задачу?',
                 'method' => 'post',
             ],
         ]) ?>
@@ -29,16 +29,52 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
-            'services_id',
-            'user_id',
-            'equipment_id',
+            //'id',
+            [
+                'attribute' => 'services_id',
+                'label' => 'Услуга',
+                'value' => function ($model) {
+                        return $model->services->name;
+                    },
+            ],
+            [
+                'attribute' => 'user_id',
+                'label' => 'Пользователи',
+                'value' => function ($model) {
+                        return $model->user->username;
+                    },
+            ],
+            [
+                'attribute' => 'equipment_id',
+                'label' => 'Пользователи',
+                'value' => function ($model) {
+                        return $model->equipment->name;
+                    },
+            ],
             'comment',
-            'creator_id',
-            'worker_id',
+            [
+                'attribute' => 'creator_id',
+                'label' => 'Создатель задачи',
+                'value' => function ($model) {
+                        return $model->creator->username;
+                    },
+            ],
+            [
+                'attribute' => 'worker_id',
+                'label' => 'Исполнитель задачи',
+                'value' => function ($model) {
+                        return $model->worker->username;
+                    },
+            ],
             'started_at',
             'end_at',
-            'status',
+            [
+                'attribute' => 'status',
+                'label' => 'Статус задачи',
+                'value' => function ($model) {
+                        return $model->statusName->name;
+                    },
+            ],
         ],
     ]) ?>
 

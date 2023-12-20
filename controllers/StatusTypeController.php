@@ -8,6 +8,7 @@ use app\models\StatusTypeSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * StatusTypeController implements the CRUD actions for StatusType model.
@@ -22,11 +23,32 @@ class StatusTypeController extends Controller
         return array_merge(
             parent::behaviors(),
             [
+                // Ваш существующий VerbFilter
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
                         'delete' => ['POST'],
                     ],
+                ],
+
+                // Добавление AccessControl
+                'access' => [
+                    'class' => AccessControl::className(),
+                    'rules' => [
+                        [
+                            'actions' => ['index'], // перечислите здесь действия, для которых требуется аутентификация
+                            'allow' => false,
+                            'roles' => ['?'], // символ ? означает "гостей сайта"
+                        ],
+                        [
+                            'actions' => ['index'], // перечислите здесь действия, для которых требуется аутентификация
+                            'allow' => false,
+                            'roles' => ['@'], // символ @ означает "аутентифицированных пользователей"
+                        ],
+                    ],
+                    'denyCallback' => function ($rule, $action) {
+                        return $action->controller->redirect('/site/login');
+                    },
                 ],
             ]
         );
@@ -40,9 +62,9 @@ class StatusTypeController extends Controller
     public function actionIndex()
     {   
 
-        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-            return $this->redirect('/site/login');
-        }
+        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
+        //     return $this->redirect('/site/login');
+        // }
 
         $searchModel = new StatusTypeSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
@@ -62,9 +84,9 @@ class StatusTypeController extends Controller
     public function actionView($id)
     {   
 
-        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-            return $this->redirect('/site/login');
-        }
+        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
+        //     return $this->redirect('/site/login');
+        // }
 
         return $this->render('view', [
             'model' => $this->findModel($id),
@@ -79,9 +101,9 @@ class StatusTypeController extends Controller
     public function actionCreate()
     {   
 
-        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-            return $this->redirect('/site/login');
-        }
+        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
+        //     return $this->redirect('/site/login');
+        // }
 
         $model = new StatusType();
 
@@ -108,9 +130,9 @@ class StatusTypeController extends Controller
     public function actionUpdate($id)
     {   
 
-        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-            return $this->redirect('/site/login');
-        }
+        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
+        //     return $this->redirect('/site/login');
+        // }
 
         $model = $this->findModel($id);
 
@@ -133,9 +155,9 @@ class StatusTypeController extends Controller
     public function actionDelete($id)
     {   
 
-        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-            return $this->redirect('/site/login');
-        }
+        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
+        //     return $this->redirect('/site/login');
+        // }
 
         $this->findModel($id)->delete();
 
@@ -152,9 +174,9 @@ class StatusTypeController extends Controller
     protected function findModel($id)
     {   
 
-        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-            return $this->redirect('/site/login');
-        }
+        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
+        //     return $this->redirect('/site/login');
+        // }
 
         if (($model = StatusType::findOne(['id' => $id])) !== null) {
             return $model;

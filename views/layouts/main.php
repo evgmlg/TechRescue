@@ -38,7 +38,8 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     <header>
         <?php
         NavBar::begin([
-            'brandLabel' => Yii::$app->name,
+            'brandLabel' => "<img src = '/images/logoheader20x20.png'>" . Yii::$app->name,
+            // 'brandLabel' => Yii::$app->name,
             'brandUrl' => Yii::$app->homeUrl,
             'options' => [
                 'class' => 'navbar navbar-expand-md navbar-black bg-white shadow fixed-top',
@@ -69,6 +70,10 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
             ];
         }
         
+        if(!Yii::$app->user->isGuest && Yii::$app->user->identity->is_admin == 0){
+            $menuItems[] = ['label'=> 'Мои заказы','url'=> ['/tasks']];
+        }
+
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav me-auto mb-2 mb-md-0'],
             'items' => $menuItems,

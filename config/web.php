@@ -5,7 +5,7 @@ $db = require __DIR__ . '/db.php';
 
 $config = [
     'id' => 'basic',
-    'name' => 'TechRescue',
+    'name' => '',
     'language' => 'ru-Ru',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],

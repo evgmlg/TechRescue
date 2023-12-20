@@ -7,6 +7,7 @@ use app\models\EquipmentSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * EquipmentController implements the CRUD actions for Equipment model.
@@ -21,11 +22,32 @@ class EquipmentController extends Controller
         return array_merge(
             parent::behaviors(),
             [
+                // Ваш существующий VerbFilter
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
                         'delete' => ['POST'],
                     ],
+                ],
+
+                // Добавление AccessControl
+                'access' => [
+                    'class' => AccessControl::className(),
+                    'rules' => [
+                        [
+                            'actions' => ['index'], // перечислите здесь действия, для которых требуется аутентификация
+                            'allow' => false,
+                            'roles' => ['?'], // символ ? означает "гостей сайта"
+                        ],
+                        [
+                            'actions' => ['index'], // перечислите здесь действия, для которых требуется аутентификация
+                            'allow' => false,
+                            'roles' => ['@'], // символ @ означает "аутентифицированных пользователей"
+                        ],
+                    ],
+                    'denyCallback' => function ($rule, $action) {
+                        return $action->controller->redirect('/site/login');
+                    },
                 ],
             ]
         );
@@ -38,9 +60,9 @@ class EquipmentController extends Controller
      */
     public function actionIndex()
     {   
-        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-            return $this->redirect('/site/login');
-        }
+        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
+        //     return $this->redirect('/site/login');
+        // }
         $searchModel = new EquipmentSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
@@ -70,9 +92,9 @@ class EquipmentController extends Controller
      */
     public function actionCreate()
     {   
-        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-            return $this->redirect('/site/login');
-        }
+        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
+        //     return $this->redirect('/site/login');
+        // }
 
         $model = new Equipment();
 
@@ -98,9 +120,9 @@ class EquipmentController extends Controller
      */
     public function actionUpdate($id)
     {   
-        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-            return $this->redirect('/site/login');
-        }
+        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
+        //     return $this->redirect('/site/login');
+        // }
 
         $model = $this->findModel($id);
 
@@ -122,9 +144,9 @@ class EquipmentController extends Controller
      */
     public function actionDelete($id)
     {   
-        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-            return $this->redirect('/site/login');
-        }
+        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
+        //     return $this->redirect('/site/login');
+        // }
 
         $this->findModel($id)->delete();
 
@@ -140,9 +162,9 @@ class EquipmentController extends Controller
      */
     protected function findModel($id)
     {   
-        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-            return $this->redirect('/site/login');
-        }
+        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
+        //     return $this->redirect('/site/login');
+        // }
         
         if (($model = Equipment::findOne(['id' => $id])) !== null) {
             return $model;
