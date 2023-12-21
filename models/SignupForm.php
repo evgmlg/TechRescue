@@ -74,7 +74,7 @@ class SignupForm extends Model
             )
             ->setFrom([Yii::$app->params['supportEmail'] => 'Подтверждение почты TechR'])
             ->setTo($this->email)
-            ->setSubject('Регистрация аккаунта на  ' . Yii::$app->name)
+            ->setSubject('Регистрация аккаунта на сайте TechResuce')
             ->send();
     }
 
