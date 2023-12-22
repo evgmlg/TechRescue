@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use app\helpers\AppHelper;
 
 /**
  * StatusTypeController implements the CRUD actions for StatusType model.
@@ -41,9 +42,12 @@ class StatusTypeController extends Controller
                             'roles' => ['?'], // символ ? означает "гостей сайта"
                         ],
                         [
-                            'actions' => ['index'], // перечислите здесь действия, для которых требуется аутентификация
-                            'allow' => false,
-                            'roles' => ['@'], // символ @ означает "аутентифицированных пользователей"
+                            'actions' => ['index','create', 'update', 'delete','view'],
+                            'allow' => true,
+                            'roles' => ['@'],
+                            'matchCallback' => function ($rule, $action) {
+                                return AppHelper::isVisibleForAdmin();
+                            }
                         ],
                     ],
                     'denyCallback' => function ($rule, $action) {
@@ -61,11 +65,6 @@ class StatusTypeController extends Controller
      */
     public function actionIndex()
     {   
-
-        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-        //     return $this->redirect('/site/login');
-        // }
-
         $searchModel = new StatusTypeSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
@@ -83,11 +82,6 @@ class StatusTypeController extends Controller
      */
     public function actionView($id)
     {   
-
-        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-        //     return $this->redirect('/site/login');
-        // }
-
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -100,11 +94,6 @@ class StatusTypeController extends Controller
      */
     public function actionCreate()
     {   
-
-        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-        //     return $this->redirect('/site/login');
-        // }
-
         $model = new StatusType();
 
         if ($this->request->isPost) {
@@ -129,11 +118,6 @@ class StatusTypeController extends Controller
      */
     public function actionUpdate($id)
     {   
-
-        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-        //     return $this->redirect('/site/login');
-        // }
-
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
@@ -154,11 +138,6 @@ class StatusTypeController extends Controller
      */
     public function actionDelete($id)
     {   
-
-        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-        //     return $this->redirect('/site/login');
-        // }
-
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
@@ -173,11 +152,6 @@ class StatusTypeController extends Controller
      */
     protected function findModel($id)
     {   
-
-        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-        //     return $this->redirect('/site/login');
-        // }
-
         if (($model = StatusType::findOne(['id' => $id])) !== null) {
             return $model;
         }

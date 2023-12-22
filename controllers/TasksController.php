@@ -45,7 +45,7 @@ class TasksController extends Controller
                             'actions' => ['index'], // перечислите здесь действия, для которых требуется аутентификация
                             'allow' => true,
                             'roles' => ['@'], // символ @ означает "аутентифицированных пользователей"
-                        ],
+                        ],  
                     ],
                     'denyCallback' => function ($rule, $action) {
                         return $action->controller->redirect('/site/login');
@@ -60,33 +60,6 @@ class TasksController extends Controller
      *
      * @return string
      */
-    // public function actionIndex()
-    // {
-    //     // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-    //     //     return $this->redirect('/site');
-    //     // }
-
-
-    //     $searchModel = new TasksSearch();
-
-    //     // Получаем ID текущего пользователя
-    //     $user_id = Yii::$app->user->id;
-    //     // Определяем, является ли пользователь администратором
-    //     $isAdmin = Yii::$app->user->identity->is_admin;
-
-    //     // Если пользователь не админ, ограничиваем поиск его собственными записями
-    //     if ($isAdmin == 0) {
-    //         $searchModel->user_id = $user_id;
-    //     }
-
-    //     //$searchModel = new TasksSearch();
-    //     $dataProvider = $searchModel->search($this->request->queryParams);
-
-    //     return $this->render('index', [
-    //         'searchModel' => $searchModel,
-    //         'dataProvider' => $dataProvider,
-    //     ]);
-    // }
 
     public function actionIndex()
     {
@@ -112,10 +85,6 @@ class TasksController extends Controller
      */
     public function actionView($id)
     {
-        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-        //     return $this->redirect('/site/login');
-        // }
-
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -128,11 +97,6 @@ class TasksController extends Controller
      */
     public function actionCreate()
     {
-
-        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-        //     return $this->redirect('/site/login');
-        // }
-
         $model = new Tasks();
 
         if ($this->request->isPost) {
@@ -157,11 +121,6 @@ class TasksController extends Controller
      */
     public function actionUpdate($id)
     {
-
-        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-        //     return $this->redirect('/site/login');
-        // }
-
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
@@ -182,11 +141,6 @@ class TasksController extends Controller
      */
     public function actionDelete($id)
     {
-
-        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-        //     return $this->redirect('/site/login');
-        // }
-
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
@@ -201,11 +155,6 @@ class TasksController extends Controller
      */
     protected function findModel($id)
     {
-
-        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-        //     return $this->redirect('/site/login');
-        // }
-
         if (($model = Tasks::findOne(['id' => $id])) !== null) {
             return $model;
         }

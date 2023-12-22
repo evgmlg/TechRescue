@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use app\helpers\AppHelper;
 
 /**
  * CategoryController implements the CRUD actions for Category model.
@@ -41,9 +42,12 @@ class CategoryController extends Controller
                             'roles' => ['?'], // символ ? означает "гостей сайта"
                         ],
                         [
-                            'actions' => ['index'], // перечислите здесь действия, для которых требуется аутентификация
-                            'allow' => false,
-                            'roles' => ['@'], // символ @ означает "аутентифицированных пользователей"
+                            'actions' => ['index','create', 'update', 'delete', 'view'],
+                            'allow' => true,
+                            'roles' => ['@'],
+                            'matchCallback' => function ($rule, $action) {
+                                return AppHelper::isVisibleForAdmin();
+                            }
                         ],
                     ],
                     'denyCallback' => function ($rule, $action) {
@@ -60,12 +64,7 @@ class CategoryController extends Controller
      * @return string
      */
     public function actionIndex()
-    {   
-
-        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-        //     return $this->redirect('/site/login');
-        // }
-
+    {
         $searchModel = new CategorySearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
@@ -82,12 +81,7 @@ class CategoryController extends Controller
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
-    {   
-
-        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-        //     return $this->redirect('/site/login');
-        // }
-
+    {
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -99,12 +93,7 @@ class CategoryController extends Controller
      * @return string|\yii\web\Response
      */
     public function actionCreate()
-    {   
-
-        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-        //     return $this->redirect('/site/login');
-        // }
-        
+    {
         $model = new Category();
 
         if ($this->request->isPost) {
@@ -128,11 +117,7 @@ class CategoryController extends Controller
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id)
-    {   
-        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-        //     return $this->redirect('/site/login');
-        // }
-
+    {
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
@@ -153,11 +138,6 @@ class CategoryController extends Controller
      */
     public function actionDelete($id)
     {
-
-        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-        //     return $this->redirect('/site/login');
-        // }     
-
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
@@ -171,11 +151,7 @@ class CategoryController extends Controller
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
-    {   
-        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-        //     return $this->redirect('/site/login');
-        // }
-
+    {
         if (($model = Category::findOne(['id' => $id])) !== null) {
             return $model;
         }

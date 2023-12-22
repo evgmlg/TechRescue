@@ -78,10 +78,6 @@ class ServicesController extends Controller
      */
     public function actionView($id)
     {   
-        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-        //     return $this->redirect('/services');
-        // }
-
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -94,10 +90,6 @@ class ServicesController extends Controller
      */
     public function actionCreate()
     {   
-        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-        //     return $this->redirect('/services');
-        // }
-
         $model = new Services();
 
         if ($this->request->isPost) {
@@ -122,10 +114,6 @@ class ServicesController extends Controller
      */
     public function actionUpdate($id)
     {   
-        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-        //     return $this->redirect('/services');
-        // }
-
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
@@ -146,11 +134,6 @@ class ServicesController extends Controller
      */
     public function actionDelete($id)
     {   
-
-        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-        //     return $this->redirect('/services');
-        // }
-
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
@@ -165,11 +148,6 @@ class ServicesController extends Controller
      */
     protected function findModel($id)
     {   
-
-        // if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-        //     return $this->redirect('/services');
-        // }
-
         if (($model = Services::findOne(['id' => $id])) !== null) {
             return $model;
         }
