@@ -46,7 +46,7 @@ $this->params['breadcrumbs'][] =  $this->title;
             ],
             [
                 'attribute' => 'equipment_id',
-                'label' => 'Пользователи',
+                'label' => 'Оборудование',
                 'value' => function ($model) {
                         return $model->equipment->name;
                     },

@@ -68,6 +68,7 @@ class EquipmentController extends Controller
         $searchModel = new EquipmentSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
+        $dataProvider->pagination->pageSize = 5;
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,

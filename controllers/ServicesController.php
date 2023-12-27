@@ -8,7 +8,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-
+use app\helpers\AppHelper;
 /**
  * ServicesController implements the CRUD actions for Services model.
  */
@@ -40,9 +40,12 @@ class ServicesController extends Controller
                             'roles' => ['?'], // символ ? означает "гостей сайта"
                         ],
                         [
-                            'actions' => ['index'], // перечислите здесь действия, для которых требуется аутентификация
+                            'actions' => ['index','create', 'update', 'delete', 'view'],
                             'allow' => true,
-                            'roles' => ['@'], // символ @ означает "аутентифицированных пользователей"
+                            'roles' => ['@'],
+                            'matchCallback' => function ($rule, $action) {
+                                return AppHelper::isVisibleForAdmin();
+                            }
                         ],
                     ],
                     'denyCallback' => function ($rule, $action) {

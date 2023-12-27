@@ -68,6 +68,7 @@ class StatusTypeController extends Controller
         $searchModel = new StatusTypeSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
+        $dataProvider->pagination->pageSize = 5;
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,

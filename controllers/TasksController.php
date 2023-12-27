@@ -8,7 +8,7 @@ use app\models\TasksSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use app\helpers\AppHelper;
 use yii\filters\AccessControl;
 
 /**
@@ -42,10 +42,13 @@ class TasksController extends Controller
                             'roles' => ['?'], // символ ? означает "гостей сайта"
                         ],
                         [
-                            'actions' => ['index'], // перечислите здесь действия, для которых требуется аутентификация
+                            'actions' => ['index','create', 'update', 'delete','view'],
                             'allow' => true,
-                            'roles' => ['@'], // символ @ означает "аутентифицированных пользователей"
-                        ],  
+                            'roles' => ['@'],
+                            'matchCallback' => function ($rule, $action) {
+                                return AppHelper::isVisibleForAdmin();
+                            }
+                        ], 
                     ],
                     'denyCallback' => function ($rule, $action) {
                         return $action->controller->redirect('/site/login');
@@ -71,6 +74,7 @@ class TasksController extends Controller
             $dataProvider->query->andWhere(['user_id' => Yii::$app->user->id]);
         }
 
+        $dataProvider->pagination->pageSize = 5;
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
