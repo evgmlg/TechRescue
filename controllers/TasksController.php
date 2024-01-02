@@ -48,7 +48,12 @@ class TasksController extends Controller
                             'matchCallback' => function ($rule, $action) {
                                 return AppHelper::isVisibleForAdmin();
                             }
-                        ], 
+                        ],
+                        [
+                            'actions' => ['index','view'],
+                            'allow' => true,
+                            'roles' => ['@'],
+                        ],  
                     ],
                     'denyCallback' => function ($rule, $action) {
                         return $action->controller->redirect('/site/login');

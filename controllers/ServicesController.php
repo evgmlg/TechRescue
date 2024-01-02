@@ -47,6 +47,11 @@ class ServicesController extends Controller
                                 return AppHelper::isVisibleForAdmin();
                             }
                         ],
+                        [
+                            'actions' => ['index'],
+                            'allow' => true,
+                            'roles' => ['@'],
+                        ],
                     ],
                     'denyCallback' => function ($rule, $action) {
                         return $action->controller->redirect('/site/login');

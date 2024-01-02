@@ -85,6 +85,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 User::getDropDownList(),
                 ['class' => 'form-control', 'prompt' => '--Выберите пользователя--']
             ),
+            'visible' => AppHelper::isVisibleForAdmin()
         ],
         [
             'attribute' => 'worker_id',
@@ -98,6 +99,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 User::getDropDownList(),
                 ['class' => 'form-control', 'prompt' => '--Выберите пользователя--']
             ),
+            'visible' => AppHelper::isVisibleForAdmin()
         ],
         'started_at',
         'end_at',
@@ -115,6 +117,16 @@ $this->params['breadcrumbs'][] = $this->title;
             ),
         ],
     ];
+
+    if (!Yii::$app->user->isGuest && Yii::$app->user->identity->is_admin == 0){
+        $columns[] = [
+            'class' => ActionColumn::className(),
+            'template' => '{view}',
+            'urlCreator' => function ($action, Tasks $model, $key, $index, $column) {
+                return Url::toRoute([$action, 'id' => $model->id]);
+            },
+        ];
+    }
 
     if (!Yii::$app->user->isGuest && Yii::$app->user->identity->is_admin == 1) {
         $columns[] = [

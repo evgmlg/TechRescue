@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
-
+use app\helpers\AppHelper;
 /** @var yii\web\View $this */
 /** @var app\models\Tasks $model */
 
