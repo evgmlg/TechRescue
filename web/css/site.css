@@ -110,6 +110,13 @@ a.desc:after {
     }
 }
 
+body {
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
 .logout {
     padding-left: 0px;
 }
@@ -234,7 +241,7 @@ a.desc:after {
     background-color: #dfdfdf;
 }
 
-.row.svf{
+.row.svf {
     text-align: justify;
     margin-right: 82px;
 }
@@ -265,10 +272,10 @@ a.desc:after {
     bottom: 30px;
     right: 50px;
     z-index: 99;
-    background-color: rgba(28,28,28,0);
+    background-color: rgba(28, 28, 28, 0);
     font-size: 20px;
     text-decoration: none;
-    border-color: rgba(28,28,28,0);
+    border-color: rgba(28, 28, 28, 0);
     color: #696969;
 }
 
