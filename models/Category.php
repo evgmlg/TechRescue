@@ -40,8 +40,8 @@ class Category extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'name' => 'Name',
+            'id' => 'ID категории',
+            'name' => 'Навазние категории',
         ];
     }
 

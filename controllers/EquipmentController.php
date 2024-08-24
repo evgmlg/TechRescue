@@ -1,12 +1,15 @@
 <?php
 
 namespace app\controllers;
+
 use Yii;
 use app\models\Equipment;
 use app\models\EquipmentSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
+use app\helpers\AppHelper;
 
 /**
  * EquipmentController implements the CRUD actions for Equipment model.
@@ -21,11 +24,35 @@ class EquipmentController extends Controller
         return array_merge(
             parent::behaviors(),
             [
+                // Ваш существующий VerbFilter
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
                         'delete' => ['POST'],
                     ],
+                ],
+
+                // Добавление AccessControl
+                'access' => [
+                    'class' => AccessControl::className(),
+                    'rules' => [
+                        [
+                            'actions' => ['index'], // перечислите здесь действия, для которых требуется аутентификация
+                            'allow' => false,
+                            'roles' => ['?'], // символ ? означает "гостей сайта"
+                        ],
+                        [
+                            'actions' => ['index','create', 'update', 'delete','view'],
+                            'allow' => true,
+                            'roles' => ['@'],
+                            'matchCallback' => function ($rule, $action) {
+                                return AppHelper::isVisibleForAdmin();
+                            }
+                        ],
+                    ],
+                    'denyCallback' => function ($rule, $action) {
+                        return $action->controller->redirect('/site/login');
+                    },
                 ],
             ]
         );
@@ -37,13 +64,11 @@ class EquipmentController extends Controller
      * @return string
      */
     public function actionIndex()
-    {   
-        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-            return $this->redirect('/site/login');
-        }
+    {
         $searchModel = new EquipmentSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
+        $dataProvider->pagination->pageSize = 5;
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -57,7 +82,7 @@ class EquipmentController extends Controller
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
-    {   
+    {
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -69,11 +94,7 @@ class EquipmentController extends Controller
      * @return string|\yii\web\Response
      */
     public function actionCreate()
-    {   
-        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-            return $this->redirect('/site/login');
-        }
-
+    {
         $model = new Equipment();
 
         if ($this->request->isPost) {
@@ -97,11 +118,7 @@ class EquipmentController extends Controller
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id)
-    {   
-        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-            return $this->redirect('/site/login');
-        }
-
+    {
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
@@ -121,11 +138,7 @@ class EquipmentController extends Controller
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)
-    {   
-        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-            return $this->redirect('/site/login');
-        }
-
+    {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
@@ -139,11 +152,7 @@ class EquipmentController extends Controller
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
-    {   
-        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-            return $this->redirect('/site/login');
-        }
-        
+    {
         if (($model = Equipment::findOne(['id' => $id])) !== null) {
             return $model;
         }

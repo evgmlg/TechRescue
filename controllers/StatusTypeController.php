@@ -3,8 +3,8 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Category;
-use app\models\CategorySearch;
+use app\models\StatusType;
+use app\models\StatusTypeSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -12,9 +12,9 @@ use yii\filters\AccessControl;
 use app\helpers\AppHelper;
 
 /**
- * CategoryController implements the CRUD actions for Category model.
+ * StatusTypeController implements the CRUD actions for StatusType model.
  */
-class CategoryController extends Controller
+class StatusTypeController extends Controller
 {
     /**
      * @inheritDoc
@@ -42,7 +42,7 @@ class CategoryController extends Controller
                             'roles' => ['?'], // символ ? означает "гостей сайта"
                         ],
                         [
-                            'actions' => ['index','create', 'update', 'delete', 'view'],
+                            'actions' => ['index','create', 'update', 'delete','view'],
                             'allow' => true,
                             'roles' => ['@'],
                             'matchCallback' => function ($rule, $action) {
@@ -59,13 +59,13 @@ class CategoryController extends Controller
     }
 
     /**
-     * Lists all Category models.
+     * Lists all StatusType models.
      *
      * @return string
      */
     public function actionIndex()
-    {
-        $searchModel = new CategorySearch();
+    {   
+        $searchModel = new StatusTypeSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         $dataProvider->pagination->pageSize = 5;
@@ -76,26 +76,26 @@ class CategoryController extends Controller
     }
 
     /**
-     * Displays a single Category model.
+     * Displays a single StatusType model.
      * @param int $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
-    {
+    {   
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
     }
 
     /**
-     * Creates a new Category model.
+     * Creates a new StatusType model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
-    {
-        $model = new Category();
+    {   
+        $model = new StatusType();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -111,14 +111,14 @@ class CategoryController extends Controller
     }
 
     /**
-     * Updates an existing Category model.
+     * Updates an existing StatusType model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id)
-    {
+    {   
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
@@ -131,32 +131,32 @@ class CategoryController extends Controller
     }
 
     /**
-     * Deletes an existing Category model.
+     * Deletes an existing StatusType model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)
-    {
+    {   
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
     }
 
     /**
-     * Finds the Category model based on its primary key value.
+     * Finds the StatusType model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id ID
-     * @return Category the loaded model
+     * @return StatusType the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
-    {
-        if (($model = Category::findOne(['id' => $id])) !== null) {
+    {   
+        if (($model = StatusType::findOne(['id' => $id])) !== null) {
             return $model;
         }
 
-        throw new NotFoundHttpException('Запрошенная страница не существует.');
+        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }

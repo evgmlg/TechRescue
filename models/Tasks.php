@@ -108,7 +108,7 @@ class Tasks extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getStatus0()
+    public function getStatusName()
     {
         return $this->hasOne(StatusType::class, ['id' => 'status']);
     }

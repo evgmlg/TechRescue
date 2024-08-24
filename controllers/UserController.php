@@ -2,16 +2,19 @@
 
 namespace app\controllers;
 
-use app\models\Lab;
-use app\models\LabSearch;
+use Yii;
+use app\models\User;
+use app\models\UserSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
+use app\helpers\AppHelper;
 
 /**
- * LabController implements the CRUD actions for Lab model.
+ * UserController implements the CRUD actions for User model.
  */
-class LabController extends Controller
+class UserController extends Controller
 {
     /**
      * @inheritDoc
@@ -21,26 +24,51 @@ class LabController extends Controller
         return array_merge(
             parent::behaviors(),
             [
+                // Ваш существующий VerbFilter
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
                         'delete' => ['POST'],
                     ],
                 ],
+
+                // Добавление AccessControl
+                'access' => [
+                    'class' => AccessControl::className(),
+                    'rules' => [
+                        [
+                            'actions' => ['index'], // перечислите здесь действия, для которых требуется аутентификация
+                            'allow' => false,
+                            'roles' => ['?'], // символ ? означает "гостей сайта"
+                        ],
+                        [
+                            'actions' => ['index','create', 'update', 'delete','view'],
+                            'allow' => true,
+                            'roles' => ['@'],
+                            'matchCallback' => function ($rule, $action) {
+                                return AppHelper::isVisibleForAdmin();
+                            }
+                        ],
+                    ],
+                    'denyCallback' => function ($rule, $action) {
+                        return $action->controller->redirect('/site/login');
+                    },
+                ],
             ]
         );
     }
 
     /**
-     * Lists all Lab models.
+     * Lists all User models.
      *
      * @return string
      */
     public function actionIndex()
-    {
-        $searchModel = new LabSearch();
+    {   
+        $searchModel = new UserSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
+        $dataProvider->pagination->pageSize = 5;
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -48,8 +76,8 @@ class LabController extends Controller
     }
 
     /**
-     * Displays a single Lab model.
-     * @param int $id ID
+     * Displays a single User model.
+     * @param int $id
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -61,13 +89,13 @@ class LabController extends Controller
     }
 
     /**
-     * Creates a new Lab model.
+     * Creates a new User model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
-    {
-        $model = new Lab();
+    {   
+        $model = new User();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -83,14 +111,14 @@ class LabController extends Controller
     }
 
     /**
-     * Updates an existing Lab model.
+     * Updates an existing User model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
+     * @param int $id
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id)
-    {
+    {   
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
@@ -103,29 +131,29 @@ class LabController extends Controller
     }
 
     /**
-     * Deletes an existing Lab model.
+     * Deletes an existing User model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
+     * @param int $id
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)
-    {
+    {   
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
     }
 
     /**
-     * Finds the Lab model based on its primary key value.
+     * Finds the User model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return Lab the loaded model
+     * @param int $id
+     * @return User the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
-    {
-        if (($model = Lab::findOne(['id' => $id])) !== null) {
+    {   
+        if (($model = User::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

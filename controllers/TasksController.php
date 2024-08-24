@@ -8,6 +8,8 @@ use app\models\TasksSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\helpers\AppHelper;
+use yii\filters\AccessControl;
 
 /**
  * TasksController implements the CRUD actions for Tasks model.
@@ -22,11 +24,40 @@ class TasksController extends Controller
         return array_merge(
             parent::behaviors(),
             [
+                // Ваш существующий VerbFilter
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
                         'delete' => ['POST'],
                     ],
+                ],
+
+                // Добавление AccessControl
+                'access' => [
+                    'class' => AccessControl::className(),
+                    'rules' => [
+                        [
+                            'actions' => ['index'], // перечислите здесь действия, для которых требуется аутентификация
+                            'allow' => false,
+                            'roles' => ['?'], // символ ? означает "гостей сайта"
+                        ],
+                        [
+                            'actions' => ['index','create', 'update', 'delete','view'],
+                            'allow' => true,
+                            'roles' => ['@'],
+                            'matchCallback' => function ($rule, $action) {
+                                return AppHelper::isVisibleForAdmin();
+                            }
+                        ],
+                        [
+                            'actions' => ['index','view'],
+                            'allow' => true,
+                            'roles' => ['@'],
+                        ],  
+                    ],
+                    'denyCallback' => function ($rule, $action) {
+                        return $action->controller->redirect('/site/login');
+                    },
                 ],
             ]
         );
@@ -37,15 +68,18 @@ class TasksController extends Controller
      *
      * @return string
      */
+
     public function actionIndex()
-    {   
-        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-            return $this->redirect('/site');
+    {
+        $searchModel = new TasksSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        // Если текущий пользователь не админ, фильтруем заказы так, чтобы показать только его заказы
+        if (!Yii::$app->user->identity->is_admin) {
+            $dataProvider->query->andWhere(['user_id' => Yii::$app->user->id]);
         }
 
-        $searchModel = new TasksSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
-
+        $dataProvider->pagination->pageSize = 5;
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -59,11 +93,7 @@ class TasksController extends Controller
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
-    {   
-        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-            return $this->redirect('/site/login');
-        }
-
+    {
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -75,12 +105,7 @@ class TasksController extends Controller
      * @return string|\yii\web\Response
      */
     public function actionCreate()
-    {   
-
-        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-            return $this->redirect('/site/login');
-        }
-
+    {
         $model = new Tasks();
 
         if ($this->request->isPost) {
@@ -104,12 +129,7 @@ class TasksController extends Controller
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id)
-    {   
-
-        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-            return $this->redirect('/site/login');
-        }
-
+    {
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
@@ -129,12 +149,7 @@ class TasksController extends Controller
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)
-    {   
-
-        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-            return $this->redirect('/site/login');
-        }
-
+    {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
@@ -148,12 +163,7 @@ class TasksController extends Controller
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
-    {   
-
-        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-            return $this->redirect('/site/login');
-        }
-
+    {
         if (($model = Tasks::findOne(['id' => $id])) !== null) {
             return $model;
         }

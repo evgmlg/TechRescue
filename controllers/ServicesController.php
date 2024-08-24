@@ -7,7 +7,8 @@ use app\models\ServicesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use yii\filters\AccessControl;
+use app\helpers\AppHelper;
 /**
  * ServicesController implements the CRUD actions for Services model.
  */
@@ -21,11 +22,40 @@ class ServicesController extends Controller
         return array_merge(
             parent::behaviors(),
             [
+                // Ваш существующий VerbFilter
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
                         'delete' => ['POST'],
                     ],
+                ],
+
+                // Добавление AccessControl
+                'access' => [
+                    'class' => AccessControl::className(),
+                    'rules' => [
+                        [
+                            'actions' => ['index'], // перечислите здесь действия, для которых требуется аутентификация
+                            'allow' => true,
+                            'roles' => ['?'], // символ ? означает "гостей сайта"
+                        ],
+                        [
+                            'actions' => ['index','create', 'update', 'delete', 'view'],
+                            'allow' => true,
+                            'roles' => ['@'],
+                            'matchCallback' => function ($rule, $action) {
+                                return AppHelper::isVisibleForAdmin();
+                            }
+                        ],
+                        [
+                            'actions' => ['index'],
+                            'allow' => true,
+                            'roles' => ['@'],
+                        ],
+                    ],
+                    'denyCallback' => function ($rule, $action) {
+                        return $action->controller->redirect('/site/login');
+                    },
                 ],
             ]
         );
@@ -56,10 +86,6 @@ class ServicesController extends Controller
      */
     public function actionView($id)
     {   
-        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-            return $this->redirect('/services');
-        }
-
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -72,10 +98,6 @@ class ServicesController extends Controller
      */
     public function actionCreate()
     {   
-        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-            return $this->redirect('/services');
-        }
-
         $model = new Services();
 
         if ($this->request->isPost) {
@@ -100,10 +122,6 @@ class ServicesController extends Controller
      */
     public function actionUpdate($id)
     {   
-        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-            return $this->redirect('/services');
-        }
-
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
@@ -124,11 +142,6 @@ class ServicesController extends Controller
      */
     public function actionDelete($id)
     {   
-
-        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-            return $this->redirect('/services');
-        }
-
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
@@ -143,11 +156,6 @@ class ServicesController extends Controller
      */
     protected function findModel($id)
     {   
-
-        if (Yii::$app->user->isGuest || Yii::$app->user->identity->is_admin == 0) {
-            return $this->redirect('/services');
-        }
-
         if (($model = Services::findOne(['id' => $id])) !== null) {
             return $model;
         }

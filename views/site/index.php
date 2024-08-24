@@ -17,7 +17,7 @@ $this->title = 'TechRescue';
                     <img src="images/crsl2.png" class="d-block w-100" alt="...">
                 </div>
                 <div class="carousel-item" data-bs-interval="5000">
-                    <img src="images/crsl3" class="d-block w-100" alt="...">
+                    <img src="images/crsl3.png" class="d-block w-100" alt="...">
                 </div>
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval"
